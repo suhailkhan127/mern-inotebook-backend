@@ -11,7 +11,6 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/auth') ) // url and file path
 app.use('/api/notes5', require('./routes/notes') )
   
-
 app.get('/', (req, res) => {
   res.send('Hello Suhail! = Express Api call 3')
 })

@@ -4,7 +4,6 @@ const JWT_SECRET = "SuhailHamz@Khi12";
 const fetchuser = (req, res, next) =>{
     // Get the user from the JWT and ID to req object
 
-
     // token check kerne ke liye header send karenge (header me kisi bhi user ka token place karenge)
     const token = req.header('auth-token'); 
 
