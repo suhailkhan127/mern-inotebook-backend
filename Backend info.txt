@@ -1,0 +1,34 @@
+watched: 0: 05
+https://www.youtube.com/watch?v=inEhzp3nD0M&list=PLu0W_9lII9agx66oZnT6IyhcMIbUMNMdt&index=48
+
+
+
+Express project ko run kerne ki command
+----------------------------------------
+npx nodemon index.js
+
+Nodemon ek tool hai jo Node.js server ko automatically restart karta hai
+file changes detect karta hai
+
+
+always add different email in thunderclient  before sending it to mongodb
+
+
+GET → default hota hai (isliye method nahi likhte)
+Headers → backend ko info dete hain
+req.body → frontend ka bheja hua data
+
+Collection aor collection me request ke reasons
+------------------------------------------------
+Bina collection ke kaam chalta hai, lekin Collection aapke kaam ko professional aur asaan banati hai taake aapko purani mehnat dobara na karni pare.
+
+Visual Studio Code (Thunder Client ya Postman extension) mein Collections aur Requests ka istemal coding ke liye "lazmi" nahi hota, lekin behtareen management ke liye zarori hota hai.
+
+hum bina collection ke bhi MongoDB mein data bhej sakte hain 
+
+Jab aapka project bara hota hai, to aapke paas 50-100 APIs ho sakti hain (Login, Signup, GetProducts, DeleteUser, etc). Collection ke saath manage karna easy hota he
+
+
+
+
+
