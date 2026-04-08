@@ -9,7 +9,7 @@ app.use(express.json());
 
 // Available Routes
 app.use('/api/auth', require('./routes/auth') ) // url and file path
-app.use('/api/notes5', require('./routes/notes') )
+app.use('/api/notes', require('./routes/notes') )
   
 app.get('/', (req, res) => {
   res.send('Hello Suhail! = Express Api call 3')

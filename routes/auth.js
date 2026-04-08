@@ -36,16 +36,6 @@ router.post('/createuser', [
             return res.status(400).json({ error: "Email already exists" }); // agar error hoto ye msg send karo
         }
 
-        
-        // harry code
-        // User.create({
-        //     name:req.body.name, 
-        //     password:req.body.password,
-        //     email:req.body.email, 
-        // }).then(user => res.json(user))
-        // res.json(user);
-
-
         // Dono mein farq ye hai:
         // user.save() (Jo aapne comment kiya hai): Isme pehle aap object banate hain (new User), phir usay save karte hain. Ye do steps ka kaam hai.
         // User.create() (Jo aap use kar rahe hain): Ye ek hi step mein naya document banata hai aur usay MongoDB mein save bhi kar deta hai.
@@ -84,7 +74,7 @@ router.post('/createuser', [
     
 });
 
-// ROUTE 2: Authenticate a user using: POST "/api/auth/login" . Doesn't require login
+// ROUTE 2: Authenticate/login a user using: POST "/api/auth/login" . Doesn't require login
 router.post('/login', [ // Ye ek standard MERN JWT pattern hai
     body('email', 'Email wrong add ki he').isEmail(),
     body('password', 'Password cannot be blank').exists(),
@@ -104,18 +94,18 @@ router.post('/login', [ // Ye ek standard MERN JWT pattern hai
             return res.status(400).json({error: "(Email is wrong) please try to login with correctv credential"})
         }
 
-        const comparePassword = await bcrypt.compare(password, user.password);
+        const comparePassword = await bcrypt.compare(password, user.password); // bcrypt.compare() function ka use password ko compare karne ke liye hota hai. Ye function do arguments leta hai: pehla argument user ke input se aaya hua password (plain text), aur doosra argument database me stored hashed password. Ye function internally plain text password ko hash karta hai aur phir dono hashes ko compare karta hai. Agar dono hashes match karte hain, to ye function true return karta hai, warna false return karta hai. Is tarah se hum user ke input password ko securely verify kar sakte hain bina actual password ko store kiye.
         if(!comparePassword){
             return res.status(400).json({error: "(Password is wrong) please try to login with correctv credential"});
         }
 
         const data = {
             user:{
-                id: user.id
+                id: user.id // MongoDB automatically har user ko ek unique id assign karta hai, jise hum user.id ke through access kar sakte hain. Ye id user ko uniquely identify karne ke liye hoti hai, aur isse hum JWT token me include karte hain taake jab user login kare to uski identity verify ki ja sake.
             }
         }
-        const authToken = jwt.sign(data, JWT_SECRET);
-        res.json(authToken); 
+        const authToken = jwt.sign(data, JWT_SECRET); // JWT token generate kar diya, jise frontend me use karenge user ko authenticate karne ke liye
+        res.json(authToken);  // response me token bhej diya, jise frontend me use karenge user ko authenticate karne ke liye
 
     } catch (error) { // → agar error aaye to handle karo
         console.error(error.message); // specially errors ke liye use hota hai (debugging ke liye)
@@ -125,12 +115,16 @@ router.post('/login', [ // Ye ek standard MERN JWT pattern hai
 })
 
 
-// ROUTE 3: Get user details using: POST "/api/auth/getuser" . login Required
+// ROUTE 3: Get logged in user details using: POST "/api/auth/getuser" . login Required
+
+// fetchuser yaha middle function ke roop me use ho raha hai, jiska matlab hai ki ye function har request ke beech me execute hoga. Jab bhi koi request /getuser route par aayegi, to pehle fetchuser middleware execute hoga. Ye middleware JWT token ko verify karega aur user ki identity ko authenticate karega. Agar token valid hai, to fetchuser middleware user ki information ko request object me attach kar dega (req.user), jise hum aage ke code me access kar sakte hain. Is tarah se hum ensure kar sakte hain ki sirf authenticated users hi apni details access kar sakte hain.
+
+// Middleware = beech ka function jo request aur response ke darmiyan chalta hai ye request ko check/modify karta hai phir next function ko pass karta hai
 router.post('/getuser', fetchuser, async (req, res) => {
     try {
         const userId = req.user.id;
         const user =  await User.findById(userId).select("-password"); // password ko exclude karne ke liye select me -password use kia he
-        res.json(user);
+        res.send(user);
     
     } catch (error) {
         console.error(error.message); // ye VS code ke terminal me error show karwata he 

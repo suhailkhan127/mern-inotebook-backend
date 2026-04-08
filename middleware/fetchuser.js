@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = "SuhailHamz@Khi12";
 
+
+// fetchuser yaha Middleware function he =  Middleware beech ka function jo request aur response ke darmiyan chalta hai ye request ko check/modify karta hai phir next function ko pass karta hai
 const fetchuser = (req, res, next) =>{
     // Get the user from the JWT and ID to req object
 
