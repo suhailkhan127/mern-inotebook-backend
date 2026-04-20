@@ -2,6 +2,35 @@ watched till Vid-52: 10: 03
 https://www.youtube.com/watch?v=inEhzp3nD0M&list=PLu0W_9lII9agx66oZnT6IyhcMIbUMNMdt&index=48
 
 
+Learned New
+================
+MongoDB - Video 
+Collections & New Request - Video 
+JWT Token - Video 
+pepper - Video 
+ - Video 
+ - Video 
+ - Video 
+ - Video 
+ - Video 
+ - Video 
+ - Video 
+ - Video 
+
+ - Video 
+ - Video 
+ - Video 
+ - Video 
+ - Video 
+ - Video 
+ - Video 
+ - Video 
+ - Video 
+ - Video 
+ - Video 
+ - Video 
+
+
 
 Express project ko run kerne ki command
 ----------------------------------------
@@ -39,4 +68,7 @@ node_modules/
 frontend/node_modules/
 backend/node_modules/
 
+
+
+mongodb://localhost:27017/ 
 

@@ -1,10 +1,12 @@
 const connectToMongo = require('./db');
 const express = require('express')
+var cors = require('cors');
 
 connectToMongo();
 const app = express()
-const port = 5000
- 
+const port = 5000;
+
+app.use(cors()); // CORS (Cross-Origin Resource Sharing) middleware ko use karenge, jisse ke humare frontend aur backend alag-alag domains pe hone ke bawajood communicate kar sakein
 app.use(express.json());
 
 // Available Routes
@@ -22,7 +24,7 @@ app.get('/', (req, res) => {
 
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`iNotebook Backend listening on port ${port}`)
 })
 
 

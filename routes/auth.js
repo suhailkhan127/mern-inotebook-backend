@@ -17,23 +17,20 @@ router.post('/createuser', [
     body('password', 'required minimum 5').isLength({min:5})
 ], async (req, res) => {
     
+    let success = false;
     // agar errors hon to array me send karo
     const errors = validationResult(req); 
     if (!errors.isEmpty()){
-        return res.status(400).json({ errors: errors.array() })
+        return res.status(400).json({ success, errors: errors.array() })
     } 
      
     // try catch ka purpose: Code me agar koi error aa jaye to app crash na ho, balkay handle ho jaye.
     try {
-        // console.log(req.body);
-        // const user = new User(req.body); 
-        // await user.save();
  
-        
         // await purpose = jab tak ye kaam (response) khatam nahi hota, tab tak ruk jao aur aage mat barho.
         let user =  await User.findOne({ email: req.body.email }); // yahan DB call ho rahi hai → error aa sakta hai isleiye neche wali line me error msg place kia he
         if (user) {
-            return res.status(400).json({ error: "Email already exists" }); // agar error hoto ye msg send karo
+            return res.status(400).json({ success, error: "Email already exists" }); // agar error hoto ye msg send karo
         }
 
         // Dono mein farq ye hai:
@@ -60,6 +57,9 @@ router.post('/createuser', [
         const authToken = jwt.sign(data, JWT_SECRET);
         console.log("JWT Token = " + authToken);  // VSCode ke terminal me result show karwa deta he
 
+        success = true;
+        res.json({ success, authToken });
+
         // 👉 success response
         res.status(201).json({ 
             message: "User created successfully",
@@ -79,6 +79,7 @@ router.post('/login', [ // Ye ek standard MERN JWT pattern hai
     body('email', 'Email wrong add ki he').isEmail(),
     body('password', 'Password cannot be blank').exists(),
     ], async (req, res) => {
+    let success = false; // login successful hua ya nahi ye track karne ke liye ek variable banaya hai, jiska initial value false hai. Agar login successful hota hai to is variable ko true kar denge, aur agar login unsuccessful hota hai to is variable ko false hi rehne denge. Is tarah se hum response me login ke success ya failure ko indicate kar sakte hain.
 
     // agar errors hon to array me send karo
     const errors = validationResult(req); 
@@ -91,12 +92,14 @@ router.post('/login', [ // Ye ek standard MERN JWT pattern hai
     try{
         let user = await User.findOne({ email});
         if(!user){
+            success = false;
             return res.status(400).json({error: "(Email is wrong) please try to login with correctv credential"})
         }
 
         const comparePassword = await bcrypt.compare(password, user.password); // bcrypt.compare() function ka use password ko compare karne ke liye hota hai. Ye function do arguments leta hai: pehla argument user ke input se aaya hua password (plain text), aur doosra argument database me stored hashed password. Ye function internally plain text password ko hash karta hai aur phir dono hashes ko compare karta hai. Agar dono hashes match karte hain, to ye function true return karta hai, warna false return karta hai. Is tarah se hum user ke input password ko securely verify kar sakte hain bina actual password ko store kiye.
         if(!comparePassword){
-            return res.status(400).json({error: "(Password is wrong) please try to login with correctv credential"});
+            success = false;
+            return res.status(400).json({success, error: "(Password is wrong) please try to login with correct credential"});
         }
 
         const data = {
@@ -105,7 +108,8 @@ router.post('/login', [ // Ye ek standard MERN JWT pattern hai
             }
         }
         const authToken = jwt.sign(data, JWT_SECRET); // JWT token generate kar diya, jise frontend me use karenge user ko authenticate karne ke liye
-        res.json(authToken);  // response me token bhej diya, jise frontend me use karenge user ko authenticate karne ke liye
+        success = true;
+        res.json({success, authToken});  // response me token bhej diya, jise frontend me use karenge user ko authenticate karne ke liye
 
     } catch (error) { // → agar error aaye to handle karo
         console.error(error.message); // specially errors ke liye use hota hai (debugging ke liye)
