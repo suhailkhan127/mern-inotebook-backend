@@ -109,7 +109,17 @@ router.post('/login', [ // Ye ek standard MERN JWT pattern hai
         }
         const authToken = jwt.sign(data, JWT_SECRET); // JWT token generate kar diya, jise frontend me use karenge user ko authenticate karne ke liye
         success = true;
-        res.json({success, authToken});  // response me token bhej diya, jise frontend me use karenge user ko authenticate karne ke liye
+
+        //res.json({success, authToken});  // response me token bhej diya, jise frontend me use karenge user ko authenticate karne ke liye
+
+        res.json({
+            success,
+            authToken,
+            user: {
+                name: user.name,
+                email: user.email
+            }
+        });
 
     } catch (error) { // → agar error aaye to handle karo
         console.error(error.message); // specially errors ke liye use hota hai (debugging ke liye)
